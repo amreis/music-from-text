@@ -22,7 +22,8 @@ import java.util.logging.Logger;
 public class SongFile {
     
     private String filename;
-
+    private final char NEW_LINE = '\n';
+    
     public String getFilename() {
         return filename;
     }
@@ -49,7 +50,7 @@ public class SongFile {
             while ((auxiliary = fileReader.readLine()) !=  null)
             {
                 partialString.append(auxiliary);
-                partialString.append('\n');
+                partialString.append(NEW_LINE);
             }
             fileReader.close();
         } catch (IOException ex) {
