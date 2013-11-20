@@ -9,10 +9,7 @@ package musicHandling;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author alister
- */
+
 public class Note {
     private MidiNote baseNote;
     private int octave;

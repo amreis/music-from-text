@@ -41,6 +41,13 @@ public class SongTextParser {
         else if (!synthOpen)
             throw new Exception("Error opening synthesizer.");
         
+        // Parsing is gonna occur in two steps:
+        // 1) Generate the ArrayList<Note> that represents the song
+        ParsedText intermediate = new ParsedText();
+        
+        
+        // 2) Transform to MidiEvents
+        
         //Track parsedTrack = sequence.createTrack();
     }
     
