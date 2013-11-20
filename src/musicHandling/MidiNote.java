@@ -45,9 +45,10 @@ public enum MidiNote {
         return DO;
     }
     
-    public static MidiNote fromMidiValue(int midiValue)
+    public static MidiNote fromMidiValue(int midiValue) throws Exception
     {
-        
+        if (midiValue < 0)
+            throw new Exception("Value is not valid for a note");
         switch (midiValue % NOTES_IN_AN_OCTAVE)
         {
             case 0:
