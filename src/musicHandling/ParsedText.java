@@ -202,7 +202,7 @@ public class ParsedText {
         else if (isNumeric(command))        
             return CommandKind.OCTAVE_MODIFIER;
         
-        else if (command == '?')
+        else if (command == '?' || command == '.')
             return CommandKind.TRIPLE_LAST_NOTE;
         
         else if (command == ' ')        
