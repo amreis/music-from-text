@@ -14,6 +14,10 @@ public class SongEvent {
     private float BPM;
     private Note note;
     private SongEventKind eventKind;
+
+    public SongEventKind getEventKind() {
+        return eventKind;
+    }
     
     public SongEvent(Note _note, SongEventKind _eventKind, float _BPM)
     {

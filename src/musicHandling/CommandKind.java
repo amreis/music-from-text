@@ -15,7 +15,8 @@ public enum CommandKind {
     NOTE_MODIFIER,
     OCTAVE_MODIFIER,
     BPM_MODIFIER,
-    DO_NOTHING,
+    NO_OPERATION,
     TRIPLE_LAST_NOTE,
+    LOOP,
     PAUSE;
 }

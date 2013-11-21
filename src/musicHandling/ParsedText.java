@@ -7,6 +7,7 @@
 package musicHandling;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,9 +19,11 @@ public class ParsedText {
     
     private final int MAIN_OCTAVE = 0;
     private final float MAIN_BPM = 120.0f;
+    private final float HIGH_BPM = 240.0f;
+    private final float LOW_BPM = 60.0f;
     private float CURRENT_BPM = 120.0f;
     private int CURRENT_OCTAVE = 0;
-    private final int lastExclamationIndex = 0;
+    private int lastExclamationIndex = 0;
     
     
     
@@ -49,8 +52,30 @@ public class ParsedText {
             CommandKind kind = classify(classifyMe);
             switch (kind)
             {
+               
+                case BPM_MODIFIER:
+                    treatBpmModifier(classifyMe);
+                    break;
+                case NO_OPERATION:
+                    ;
+                    break;
+                case LOOP:
+                    treatLoop();
+                    break;
                 case NOTE:
                     treatNote(classifyMe);
+                    break;
+                case NOTE_MODIFIER:
+                    ; // Do Nothing, or maybe change the semitone again?
+                    break;
+                case OCTAVE_MODIFIER:
+                    treatOctaveModifier(classifyMe);
+                    break;
+                case PAUSE:
+                    treatPause();
+                    break;
+                case TRIPLE_LAST_NOTE:
+                    treatTriple();
                     break;
             }
         }
@@ -115,7 +140,7 @@ public class ParsedText {
         else if (command == ';' || command == ',')        
             return CommandKind.BPM_MODIFIER;
         
-        else return CommandKind.DO_NOTHING;
+        else return CommandKind.NO_OPERATION;
     }
 
     private boolean isAlphabetic(char character) {
@@ -137,12 +162,6 @@ public class ParsedText {
                 character == 'i' || character == 'o' ||
                 character == 'u');
     }
-    
-    private boolean isConsonant(char character)
-    {
-        character = Character.toLowerCase(character);
-        return isAlphabetic(character) && ! isVowel(character);
-    }
 
     private boolean isNumeric(char command) {
         return (command >= '0' && command <= '9');
@@ -155,6 +174,92 @@ public class ParsedText {
     private int getBemol(int value) {
         return value - 1;
     }
+
+    private void treatLoop() {
+        int eventsUntilNow = eventList.size();
+        for (int i = lastExclamationIndex; i < eventsUntilNow; i++)
+        {
+            eventList.add(eventList.get(i));
+        }
+        lastExclamationIndex = eventList.size();
+    }
+
+    private void treatOctaveModifier(char changeOctave) {
+        final char NEWLINE = '\n';
+        int value = -1;
+        try {
+            value = Integer.parseInt(String.valueOf(changeOctave));
+        }
+        catch (NumberFormatException e)
+        {
+            if (changeOctave == NEWLINE)
+            {
+                this.CURRENT_OCTAVE = MAIN_OCTAVE;
+            }
+        }
+        
+        if (isEven(value))
+        {
+            if (this.CURRENT_OCTAVE < 5) this.CURRENT_OCTAVE += 1;
+        }
+        else if (this.CURRENT_OCTAVE > -5) this.CURRENT_OCTAVE -= 1;
+    }
     
+    
+    private boolean isEven(int number)
+    {
+        return (number % 2) == 0;
+    }
+
+    private void treatTriple() {
+        SongEvent s = null;
+        int eventPosition = -1;
+        for (int i = eventList.size() - 1; i >= 0; i--)
+            if (eventList.get(i).getEventKind() == SongEventKind.NOTE)
+            {
+                s = eventList.get(i);
+                eventPosition = i;
+                break;
+            }
+        if (s == null) return;
+        else
+        {
+            List<SongEvent> afterEvent = eventList.subList(eventPosition+1, 
+                    eventList.size() - 1);
+            eventList.set(eventPosition + 1, s);
+            eventList.set(eventPosition + 2, s);
+            
+            eventList.addAll(eventPosition + 3, afterEvent);
+        }
+        
+    }
+
+    private void treatPause() {
+        eventList.add(new SongEvent(null, SongEventKind.PAUSE, CURRENT_BPM));
+    }
+
+    private void treatBpmModifier(char classifyMe) {
+        if (classifyMe == ';')
+        {
+            increaseBPM();
+        }
+        else
+            decreaseBPM();
+    }
+
+    private void increaseBPM() {
+        if (this.CURRENT_BPM == LOW_BPM)
+            this.CURRENT_BPM = MAIN_BPM;
+        else
+            this.CURRENT_BPM = HIGH_BPM;
+       
+    }
+
+    private void decreaseBPM() {
+        if (this.CURRENT_BPM == HIGH_BPM)
+            this.CURRENT_BPM = MAIN_BPM;
+        else
+            this.CURRENT_BPM = LOW_BPM;
+    }
     
 }
