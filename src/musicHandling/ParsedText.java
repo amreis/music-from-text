@@ -38,13 +38,12 @@ public class ParsedText {
     
     public ParsedText(String text) 
     {
-        eventList = new ArrayList<SongEvent>();
-        rawText = text;
+        eventList = new ArrayList<>();
+        rawText = text.toLowerCase();
     }
 
     private void generateEventList() 
     {
-        rawText = rawText.toLowerCase();
         while (! rawText.isEmpty())
         {
             char classifyMe = rawText.charAt(0);
@@ -82,6 +81,12 @@ public class ParsedText {
     }
 
     private void treatNote(char note) {
+        if (rawText.isEmpty())
+        {
+            eventList.add(new SongEvent(new Note(MidiNote.fromCharValue(note), CURRENT_OCTAVE), 
+                    SongEventKind.NOTE, CURRENT_BPM));
+            return;
+        }
         char nextChar = rawText.charAt(0);
         CommandKind nextCharKind = classify(nextChar);
         if (nextCharKind != CommandKind.NOTE_MODIFIER)
