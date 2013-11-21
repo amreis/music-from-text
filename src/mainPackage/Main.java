@@ -5,7 +5,7 @@
  */
 
 package mainPackage;
-
+import musicHandling.ParsedText;
 /**
  *
  * @author alister
@@ -18,7 +18,8 @@ public class Main {
     public static void main(String[] args) {
         // TODO code application logic here
         new MainFrame().setVisible(true);
-        
+        ParsedText p = new ParsedText("as432512jpsdijofoa");
+        p.getEventList();
     }
     
 }

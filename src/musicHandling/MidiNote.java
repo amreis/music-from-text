@@ -33,7 +33,7 @@ public enum MidiNote {
         this.midiValue = value;
     }
     
-    
+  
     public int getMidiValue()
     {
         return this.midiValue;
@@ -43,6 +43,28 @@ public enum MidiNote {
     {
         // TODO: CHANGE
         return DO;
+    }
+    
+    public static MidiNote fromCharValue(char midiValue)
+    {
+        switch(midiValue)
+        {
+            case 'c':
+                return DO;
+            case 'd':
+                return RE;
+            case 'e':
+                return MI;
+            case 'f':
+                return FA;
+            case 'g':
+                return SOL;
+            case 'a':
+                return LA;
+            case 'b':
+                return SI;
+        }
+        return null;
     }
     
     public static MidiNote fromMidiValue(int midiValue) throws Exception

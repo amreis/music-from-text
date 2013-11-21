@@ -10,9 +10,12 @@ package musicHandling;
  *
  * @author alister
  */
-public enum SongEventKind {
+public enum CommandKind {
     NOTE,
-    PAUSE,
-    BPM_CHANGE;
-    
+    NOTE_MODIFIER,
+    OCTAVE_MODIFIER,
+    BPM_MODIFIER,
+    DO_NOTHING,
+    TRIPLE_LAST_NOTE,
+    PAUSE;
 }
