@@ -117,6 +117,72 @@ public class ParsedText {
                     SongEventKind.NOTE, CURRENT_BPM));
         }
     }
+    private void treatLoop() {
+        int eventsUntilNow = eventList.size();
+        for (int i = lastExclamationIndex; i < eventsUntilNow; i++)
+        {
+            eventList.add(eventList.get(i));
+        }
+        lastExclamationIndex = eventList.size();
+    }
+
+    private void treatOctaveModifier(char changeOctave) {
+        final char NEWLINE = '\n';
+        int value = -1;
+        try {
+            value = Integer.parseInt(String.valueOf(changeOctave));
+        }
+        catch (NumberFormatException e)
+        {
+            if (changeOctave == NEWLINE)
+            {
+                this.CURRENT_OCTAVE = MAIN_OCTAVE;
+            }
+        }
+        
+        if (isEven(value))
+        {
+            if (this.CURRENT_OCTAVE < 5) this.CURRENT_OCTAVE += 1;
+        }
+        else if (this.CURRENT_OCTAVE > -5) this.CURRENT_OCTAVE -= 1;
+    }
+    
+    private void treatTriple() {
+        SongEvent s = null;
+        int eventPosition = -1;
+        for (int i = eventList.size() - 1; i >= 0; i--)
+            if (eventList.get(i).getEventKind() == SongEventKind.NOTE)
+            {
+                s = eventList.get(i);
+                eventPosition = i;
+                break;
+            }
+        if (s == null) return;
+        else
+        {
+            List<SongEvent> afterEvent = eventList.subList(eventPosition+1, 
+                    eventList.size() - 1);
+            eventList.set(eventPosition + 1, s);
+            eventList.set(eventPosition + 2, s);
+            if (afterEvent.isEmpty()) return;
+            eventList.addAll(eventPosition + 3, afterEvent);
+        }
+        
+    }
+
+    private void treatPause() {
+        eventList.add(new SongEvent(null, SongEventKind.PAUSE, CURRENT_BPM));
+    }
+
+    private void treatBpmModifier(char classifyMe) {
+        if (classifyMe == ';')
+        {
+            increaseBPM();
+        }
+        else
+            decreaseBPM();
+    }
+
     
     private String removeFirstCharacter(String value)
     {
@@ -145,6 +211,8 @@ public class ParsedText {
         else if (command == ';' || command == ',')        
             return CommandKind.BPM_MODIFIER;
         
+        else if (command == '!')
+            return CommandKind.LOOP;
         else return CommandKind.NO_OPERATION;
     }
 
@@ -180,35 +248,6 @@ public class ParsedText {
         return value - 1;
     }
 
-    private void treatLoop() {
-        int eventsUntilNow = eventList.size();
-        for (int i = lastExclamationIndex; i < eventsUntilNow; i++)
-        {
-            eventList.add(eventList.get(i));
-        }
-        lastExclamationIndex = eventList.size();
-    }
-
-    private void treatOctaveModifier(char changeOctave) {
-        final char NEWLINE = '\n';
-        int value = -1;
-        try {
-            value = Integer.parseInt(String.valueOf(changeOctave));
-        }
-        catch (NumberFormatException e)
-        {
-            if (changeOctave == NEWLINE)
-            {
-                this.CURRENT_OCTAVE = MAIN_OCTAVE;
-            }
-        }
-        
-        if (isEven(value))
-        {
-            if (this.CURRENT_OCTAVE < 5) this.CURRENT_OCTAVE += 1;
-        }
-        else if (this.CURRENT_OCTAVE > -5) this.CURRENT_OCTAVE -= 1;
-    }
     
     
     private boolean isEven(int number)
@@ -216,42 +255,7 @@ public class ParsedText {
         return (number % 2) == 0;
     }
 
-    private void treatTriple() {
-        SongEvent s = null;
-        int eventPosition = -1;
-        for (int i = eventList.size() - 1; i >= 0; i--)
-            if (eventList.get(i).getEventKind() == SongEventKind.NOTE)
-            {
-                s = eventList.get(i);
-                eventPosition = i;
-                break;
-            }
-        if (s == null) return;
-        else
-        {
-            List<SongEvent> afterEvent = eventList.subList(eventPosition+1, 
-                    eventList.size() - 1);
-            eventList.set(eventPosition + 1, s);
-            eventList.set(eventPosition + 2, s);
-            
-            eventList.addAll(eventPosition + 3, afterEvent);
-        }
-        
-    }
-
-    private void treatPause() {
-        eventList.add(new SongEvent(null, SongEventKind.PAUSE, CURRENT_BPM));
-    }
-
-    private void treatBpmModifier(char classifyMe) {
-        if (classifyMe == ';')
-        {
-            increaseBPM();
-        }
-        else
-            decreaseBPM();
-    }
-
+    
     private void increaseBPM() {
         if (this.CURRENT_BPM == LOW_BPM)
             this.CURRENT_BPM = MAIN_BPM;

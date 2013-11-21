@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         // TODO code application logic here
         new MainFrame().setVisible(true);
-        ParsedText p = new ParsedText("as432512jpsdijofoa");
+        ParsedText p = new ParsedText("ab!abab!");
         p.getEventList();
     }
     
