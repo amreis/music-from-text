@@ -1,7 +1,9 @@
 package mainPackage;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import musicHandling.SongFile;
+import musicHandling.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -137,8 +139,14 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_loadButtonActionPerformed
 
     private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
-        // TODO add your handling code here:
-        System.out.println("Play dat bass!");
+        try {
+            // TODO add your handling code here:
+            System.out.println("Play dat bass!");
+            SongTextParser s = new SongTextParser(musicText.getText());
+            s.Parse();
+        } catch (Exception ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_playButtonActionPerformed
 
     private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseButtonActionPerformed

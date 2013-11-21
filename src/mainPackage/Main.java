@@ -5,7 +5,9 @@
  */
 
 package mainPackage;
-import musicHandling.ParsedText;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import musicHandling.SongTextParser;
 /**
  *
  * @author alister
@@ -18,8 +20,15 @@ public class Main {
     public static void main(String[] args) {
         // TODO code application logic here
         new MainFrame().setVisible(true);
-        ParsedText p = new ParsedText("ab!abab!");
-        p.getEventList();
+        //ParsedText p = new ParsedText("ab!abab!");
+        //p.getEventList();
+        SongTextParser s;
+        s = new SongTextParser("ab !;abab!");
+        try {
+            s.Parse();
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

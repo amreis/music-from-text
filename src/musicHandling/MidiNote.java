@@ -100,10 +100,17 @@ public enum MidiNote {
             default:
                 ; // Never Happens.
         }
+        
+     
     
         
         return null;
     }
     
-   
+    public int getMidivalueWithOctave(int octave)
+    {
+        int value = this.midiValue + (octave - CENTRAL_OCTAVE) * NOTES_IN_AN_OCTAVE;
+        if (value < 0) value = 0;
+        return value;
+    }
 }

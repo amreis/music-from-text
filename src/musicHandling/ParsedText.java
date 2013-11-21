@@ -17,12 +17,12 @@ public class ParsedText {
     private ArrayList<SongEvent> eventList;
     private String rawText;
     
-    private final int MAIN_OCTAVE = 0;
+    private final int MAIN_OCTAVE = 5;
     private final float MAIN_BPM = 120.0f;
     private final float HIGH_BPM = 240.0f;
     private final float LOW_BPM = 60.0f;
     private float CURRENT_BPM = 120.0f;
-    private int CURRENT_OCTAVE = 0;
+    private int CURRENT_OCTAVE = 5;
     private int lastExclamationIndex = 0;
     
     
@@ -121,7 +121,9 @@ public class ParsedText {
         int eventsUntilNow = eventList.size();
         for (int i = lastExclamationIndex; i < eventsUntilNow; i++)
         {
-            eventList.add(eventList.get(i));
+            SongEvent event = eventList.get(i);
+            if (event.getEventKind() != SongEventKind.BPM_CHANGE)
+                eventList.add(eventList.get(i));
         }
         lastExclamationIndex = eventList.size();
     }
@@ -142,9 +144,9 @@ public class ParsedText {
         
         if (isEven(value))
         {
-            if (this.CURRENT_OCTAVE < 5) this.CURRENT_OCTAVE += 1;
+            if (this.CURRENT_OCTAVE < 10) this.CURRENT_OCTAVE += 1;
         }
-        else if (this.CURRENT_OCTAVE > -5) this.CURRENT_OCTAVE -= 1;
+        else if (this.CURRENT_OCTAVE > 0) this.CURRENT_OCTAVE -= 1;
     }
     
     private void treatTriple() {
