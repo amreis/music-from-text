@@ -64,7 +64,7 @@ public class ParsedText {
                     SongEventKind.NOTE, CURRENT_BPM));
         else
         {
-            rawText = rawText.substring(1);
+            rawText = removeFirstCharacter(rawText);
             MidiNote baseNote = MidiNote.fromCharValue(note);
             int value = baseNote.getMidiValue();
             if (isVowel(nextChar))
