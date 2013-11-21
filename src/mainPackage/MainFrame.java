@@ -142,8 +142,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             System.out.println("Play dat bass!");
-            SongTextParser s = new SongTextParser(musicText.getText());
-            s.Parse();
+            Music m = new Music(musicText.getText());
         } catch (Exception ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }

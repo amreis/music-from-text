@@ -15,26 +15,22 @@ import javax.sound.midi.*;
  *
  * @author alister
  */
-public class SongTextParser {
+public class SongTextParser {/*
     private static Synthesizer synthesizer;
     private static Sequencer sequencer;
     private static Sequence sequence;
     private static Instrument[] instruments;
     private static MidiChannel[] midiChannels;
-    
+    */
     private String textToParse;
-    private boolean synthOpen;
-
-    public boolean isSynthOpen() {
-        return synthOpen;
-    }
+    private Track targetTrack;
+    
 
  
-    public SongTextParser(String _textToParse)
+    public SongTextParser(String _textToParse, Track _targetTrack)
     {
         this.textToParse = _textToParse;
-        openSynth();
-        if (synthesizer != null) this.synthOpen = true;
+        this.targetTrack = _targetTrack;
     }
     
     
@@ -43,8 +39,7 @@ public class SongTextParser {
     {
         if (textToParse == null || textToParse == "")        
             throw new Exception("Cannot parse empty or null text");
-        else if (!synthOpen)
-            throw new Exception("Error opening synthesizer.");
+        
         
         // Parsing is gonna occur in two steps:
         // 1) Generate the ArrayList<Note> that represents the song
@@ -53,17 +48,16 @@ public class SongTextParser {
         ArrayList<SongEvent> songEvents = intermediate.getEventList();
         
         // 2) Transform to MidiEvents
-        Track parsedTrack = sequence.createTrack();
-        synthesizer.loadInstrument(instruments[0]);
-        parsedTrack.add(new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, 0 ,0), 0));
-        translateToMidi(songEvents, parsedTrack);
+        targetTrack.add(new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, 0 ,0), 0));
+        translateToMidi(songEvents, targetTrack);
+        /*
         sequencer.setSequence(sequence);
         sequencer.setTempoInBPM(120.0f);
-        sequencer.start();
-        return null;
+        sequencer.start();*/
+        return targetTrack;
     }
     
-    
+    /*  
     private void openSynth()
     {
         try
@@ -118,11 +112,10 @@ public class SongTextParser {
         synthesizer = null;
         instruments = null;
     }
-
+    */
     private void translateToMidi(ArrayList<SongEvent> events, Track resultingTrack) {
         
-        int trackPosition = 0;
-        int tick;
+        int trackPosition = 4;
         for (SongEvent event : events)
         {
             switch (event.getEventKind())
@@ -130,7 +123,6 @@ public class SongTextParser {
                 case BPM_CHANGE:
                     break;
                 case NOTE:
-                    
                     resultingTrack.add(addNoteOnToSong(event, trackPosition));
                     trackPosition = advanceInTrack(trackPosition, event.getBPM());
                     resultingTrack.add(addNoteOffToSong(event, trackPosition));

@@ -22,13 +22,6 @@ public class Main {
         new MainFrame().setVisible(true);
         //ParsedText p = new ParsedText("ab!abab!");
         //p.getEventList();
-        SongTextParser s;
-        s = new SongTextParser("ab !;abab!");
-        try {
-            s.Parse();
-        } catch (Exception ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
 }

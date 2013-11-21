@@ -193,6 +193,7 @@ public class ParsedText {
     
     private CommandKind classify(char command)
     {
+        final char NEW_LINE = '\n';
         if (isAlphabetic(command))
         {
             if (isNoteChar(command))
@@ -201,7 +202,7 @@ public class ParsedText {
                 return CommandKind.NOTE_MODIFIER;
             
         }
-        else if (isNumeric(command))        
+        else if (isNumeric(command) || command == NEW_LINE)        
             return CommandKind.OCTAVE_MODIFIER;
         
         else if (command == '?' || command == '.')
