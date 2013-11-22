@@ -5,6 +5,8 @@
  */
 
 package musicHandling;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.midi.*;
@@ -110,7 +112,7 @@ public class Music {
             this.paused = false;
         } catch (InvalidMidiDataException ex) {
             Logger.getLogger(Music.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (IOException e) { }
     }
     
     public void stop()
