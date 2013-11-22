@@ -112,7 +112,7 @@ public class Music {
             this.paused = false;
         } catch (InvalidMidiDataException ex) {
             Logger.getLogger(Music.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException e) { }
+        }
     }
     
     public void stop()
