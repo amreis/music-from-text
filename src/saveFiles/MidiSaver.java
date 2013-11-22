@@ -16,8 +16,8 @@ import javax.sound.midi.MidiSystem;
  */
 import javax.sound.midi.Sequence;
 public class MidiSaver {
-    
-    private Sequence sequenceToSave;
+    private static final String STANDARD_FILE_EXTENSION = ".mid";
+    private final Sequence sequenceToSave;
     public MidiSaver(Sequence sequenceToSave)
     {
         this.sequenceToSave = sequenceToSave;
@@ -25,6 +25,8 @@ public class MidiSaver {
     
     public void Save(String filename)
     {
+        if (! filename.contains(STANDARD_FILE_EXTENSION))
+            filename += STANDARD_FILE_EXTENSION;
         try {
             MidiSystem.write(sequenceToSave, MidiSystem.getMidiFileTypes()[0], new File(filename));
         } catch (IOException ex) {

@@ -45,6 +45,11 @@ public class Music {
         
     }
     
+    public Sequence getSequence()
+    {
+        return sequence;        
+    }
+    
     private void openSynth()
     {
         try

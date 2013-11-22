@@ -6,7 +6,7 @@ import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import musicHandling.*;
-
+import saveFiles.*;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -66,6 +66,8 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         chooseSongFile = new javax.swing.JFileChooser();
+        chooseTxtToSave = new javax.swing.JFileChooser();
+        chooseMidiToSave = new javax.swing.JFileChooser();
         mainPanel = new javax.swing.JPanel();
         loadButton = new javax.swing.JButton();
         playButton = new javax.swing.JButton();
@@ -73,8 +75,24 @@ public class MainFrame extends javax.swing.JFrame {
         stopButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         musicText = new javax.swing.JTextArea();
+        saveMidiButton = new javax.swing.JButton();
+        saveTextButton = new javax.swing.JButton();
+
+        chooseSongFile.setDialogTitle("Open a text file...");
+
+        chooseTxtToSave.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        chooseTxtToSave.setDialogTitle("Save to text file");
+
+        chooseMidiToSave.setAcceptAllFileFilterUsed(false);
+        chooseMidiToSave.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        chooseMidiToSave.setDialogTitle("Save to MIDI...");
+        chooseMidiToSave.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("MIDI File", "mid"));
+        chooseMidiToSave.setFileSelectionMode(javax.swing.JFileChooser.FILES_AND_DIRECTORIES);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Music from Text");
+
+        mainPanel.setName(""); // NOI18N
 
         loadButton.setText("Load File");
         loadButton.addActionListener(new java.awt.event.ActionListener() {
@@ -108,6 +126,20 @@ public class MainFrame extends javax.swing.JFrame {
         musicText.setRows(5);
         jScrollPane1.setViewportView(musicText);
 
+        saveMidiButton.setText("Save MIDI");
+        saveMidiButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMidiButtonActionPerformed(evt);
+            }
+        });
+
+        saveTextButton.setText("Save text");
+        saveTextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveTextButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -116,11 +148,13 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(loadButton)
-                    .addComponent(pauseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(stopButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(playButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(58, Short.MAX_VALUE))
+                    .addComponent(pauseButton, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(playButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(stopButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(loadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(saveTextButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(saveMidiButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,7 +166,11 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(pauseButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(stopButton)
-                .addGap(0, 182, Short.MAX_VALUE))
+                .addGap(75, 75, 75)
+                .addComponent(saveTextButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveMidiButton)
+                .addGap(0, 55, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
@@ -193,6 +231,30 @@ public class MainFrame extends javax.swing.JFrame {
         currentMusic.stop();
     }//GEN-LAST:event_stopButtonActionPerformed
 
+    private void saveMidiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMidiButtonActionPerformed
+        // TODO add your handling code here:
+        int returnValue = this.chooseMidiToSave.showSaveDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION)
+        {
+            if (currentMusic == null)
+                currentMusic = new Music(musicText.getText());
+            MidiSaver saver = new MidiSaver(currentMusic.getSequence());
+            File destination = chooseMidiToSave.getSelectedFile();
+            saver.Save(destination.getAbsolutePath());
+        }
+    }//GEN-LAST:event_saveMidiButtonActionPerformed
+
+    private void saveTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveTextButtonActionPerformed
+        // TODO add your handling code here:
+        int returnValue = this.chooseTxtToSave.showSaveDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION)
+        {
+            File destination = chooseSongFile.getSelectedFile();
+            TextSaver saver = new TextSaver(musicText.getText());
+            saver.Save(destination.getAbsolutePath());
+        }
+    }//GEN-LAST:event_saveTextButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -229,13 +291,17 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFileChooser chooseMidiToSave;
     private javax.swing.JFileChooser chooseSongFile;
+    private javax.swing.JFileChooser chooseTxtToSave;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadButton;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTextArea musicText;
     private javax.swing.JButton pauseButton;
     private javax.swing.JButton playButton;
+    private javax.swing.JButton saveMidiButton;
+    private javax.swing.JButton saveTextButton;
     private javax.swing.JButton stopButton;
     // End of variables declaration//GEN-END:variables
 }
