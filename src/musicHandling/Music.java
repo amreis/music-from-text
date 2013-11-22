@@ -21,6 +21,12 @@ public class Music {
     private static MidiChannel[] midiChannels;
     
     private Track resultingMusic;
+    private boolean paused;
+
+
+    public boolean isPaused() {
+        return paused;
+    }
     
     public Music(String _text)
     {
@@ -33,13 +39,7 @@ public class Music {
         } catch (Exception ex) {
             Logger.getLogger(Music.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            sequencer.setSequence(sequence);
-            sequencer.setTempoInBPM(120.0f);
-            sequencer.start();
-        } catch (InvalidMidiDataException ex) {
-            Logger.getLogger(Music.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         
     }
     
@@ -96,5 +96,33 @@ public class Music {
         sequencer = null;
         synthesizer = null;
         instruments = null;
+    }
+    
+    public void play()
+    {
+       
+        try {
+            sequencer.setSequence(sequence);
+            if (! this.paused)
+                sequencer.setTickPosition(0);
+            sequencer.setTempoInBPM(120.0f);
+            sequencer.start();
+            this.paused = false;
+        } catch (InvalidMidiDataException ex) {
+            Logger.getLogger(Music.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void stop()
+    {
+        sequencer.stop();
+        sequencer.setTickPosition(0);
+    }
+    
+    public void pause()
+    {
+        if (this.isPaused()) return;
+        sequencer.stop();
+        this.paused = true;
     }
 }

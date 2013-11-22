@@ -19,7 +19,7 @@ public class ParsedText {
     
     private final int MAIN_OCTAVE = 5;
     private final float MAIN_BPM = 120.0f;
-    private final float HIGH_BPM = 240.0f;
+    private final float HIGH_BPM = 480.0f;
     private final float LOW_BPM = 60.0f;
     private float CURRENT_BPM = 120.0f;
     private int CURRENT_OCTAVE = 5;
@@ -260,18 +260,15 @@ public class ParsedText {
 
     
     private void increaseBPM() {
-        if (this.CURRENT_BPM == LOW_BPM)
-            this.CURRENT_BPM = MAIN_BPM;
-        else
-            this.CURRENT_BPM = HIGH_BPM;
+        if (this.CURRENT_BPM <= HIGH_BPM/2)
+            this.CURRENT_BPM *= 2;
+        
        
     }
 
     private void decreaseBPM() {
-        if (this.CURRENT_BPM == HIGH_BPM)
-            this.CURRENT_BPM = MAIN_BPM;
-        else
-            this.CURRENT_BPM = LOW_BPM;
+        if (this.CURRENT_BPM >= LOW_BPM*2)
+            this.CURRENT_BPM /= 2;
     }
     
 }

@@ -3,6 +3,8 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import musicHandling.*;
 
 /*
@@ -22,7 +24,37 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        musicText.getDocument().addDocumentListener(new DocumentListener(){
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (currentMusic != null) {
+                    currentMusic.stop();
+                    currentMusic = null;
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                
+                if (currentMusic != null) {
+                    currentMusic.stop();
+                    currentMusic = null;
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (currentMusic != null) {
+                    currentMusic.stop();
+                    currentMusic = null;
+                }
+            }
+        
+    });
     }
+    
+    private Music currentMusic = null;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -128,6 +160,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
         // TODO add your handling code here:
+        if (currentMusic != null) currentMusic.pause();
         System.out.println("Load mah file!");
         int returnValue = this.chooseSongFile.showOpenDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION)
@@ -142,7 +175,9 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             System.out.println("Play dat bass!");
-            Music m = new Music(musicText.getText());
+            if (currentMusic == null)
+                currentMusic = new Music(musicText.getText());
+            currentMusic.play();
         } catch (Exception ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -150,10 +185,12 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void pauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseButtonActionPerformed
         // TODO add your handling code here:
+        currentMusic.pause();
     }//GEN-LAST:event_pauseButtonActionPerformed
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
         // TODO add your handling code here:
+        currentMusic.stop();
     }//GEN-LAST:event_stopButtonActionPerformed
 
     /**
