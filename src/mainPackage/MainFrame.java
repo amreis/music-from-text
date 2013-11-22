@@ -250,7 +250,7 @@ public class MainFrame extends javax.swing.JFrame {
         int returnValue = this.chooseTxtToSave.showSaveDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION)
         {
-            File destination = chooseSongFile.getSelectedFile();
+            File destination = chooseTxtToSave.getSelectedFile();
             TextSaver saver = new TextSaver(musicText.getText());
             saver.Save(destination.getAbsolutePath());
         }

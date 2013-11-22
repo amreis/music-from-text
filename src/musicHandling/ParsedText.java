@@ -139,6 +139,7 @@ public class ParsedText {
             if (changeOctave == NEWLINE)
             {
                 this.CURRENT_OCTAVE = MAIN_OCTAVE;
+                return;
             }
         }
         
