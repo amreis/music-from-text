@@ -36,12 +36,7 @@ public enum MidiNote {
         return this.midiValue;
     }
     
-    public MidiNote getSharp()
-    {
-        // TODO: CHANGE
-        return DO;
-    }
-    
+
     public static MidiNote fromCharValue(char midiValue)
     {
         switch(midiValue)
