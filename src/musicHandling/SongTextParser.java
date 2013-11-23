@@ -36,8 +36,9 @@ public class SongTextParser {
     
     public Track Parse() throws Exception
     {
-        if (textToParse == null || textToParse == "")        
+        if (textToParse == null || "".equals(textToParse)) {
             throw new Exception("Cannot parse empty or null text");
+        } 
         
         
         // Parsing is gonna occur in two steps:
@@ -47,7 +48,12 @@ public class SongTextParser {
         ArrayList<SongEvent> songEvents = intermediate.getEventList();
         
         // 2) Transform to MidiEvents
-        targetTrack.add(new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, instrument ,0), 0));
+        try {
+            targetTrack.add(new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, instrument ,0), 0));
+        } catch (InvalidMidiDataException e)
+        {
+            Logger.getLogger(SongTextParser.class.getName()).log(Level.SEVERE, "Invalid Instrument");
+        }
         translateToMidi(songEvents, targetTrack);
         /*
         sequencer.setSequence(sequence);

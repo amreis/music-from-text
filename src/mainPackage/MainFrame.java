@@ -1,7 +1,11 @@
 package mainPackage;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -15,7 +19,7 @@ import saveFiles.*;
 
 
 public class MainFrame extends javax.swing.JFrame {
-
+    private int selectedInstrument = 0;
     /**
      * Creates new form NewJFrame
      */
@@ -74,6 +78,7 @@ public class MainFrame extends javax.swing.JFrame {
         musicText = new javax.swing.JTextArea();
         saveMidiButton = new javax.swing.JButton();
         saveTextButton = new javax.swing.JButton();
+        chgInstrumentButton = new javax.swing.JButton();
 
         chooseSongFile.setDialogTitle("Open a text file...");
 
@@ -139,6 +144,13 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        chgInstrumentButton.setText("Change Instrument");
+        chgInstrumentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chgInstrumentButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -147,19 +159,22 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(pauseButton, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                    .addComponent(pauseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(playButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(stopButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(loadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(saveTextButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(saveMidiButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(saveMidiButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chgInstrumentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(loadButton)
-                .addGap(80, 80, 80)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chgInstrumentButton)
+                .addGap(46, 46, 46)
                 .addComponent(playButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pauseButton)
@@ -213,7 +228,7 @@ public class MainFrame extends javax.swing.JFrame {
             // TODO add your handling code here:
             System.out.println("Play dat bass!");
             if (currentMusic == null)
-                currentMusic = new Music(musicText.getText());
+                currentMusic = new Music(musicText.getText(), selectedInstrument);
             currentMusic.play();
         } catch (Exception ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -236,7 +251,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (returnValue == JFileChooser.APPROVE_OPTION)
         {
             if (currentMusic == null)
-                currentMusic = new Music(musicText.getText());
+                currentMusic = new Music(musicText.getText(), 0);
             MidiSaver saver = new MidiSaver(currentMusic.getSequence());
             File destination = chooseMidiToSave.getSelectedFile();
             saver.Save(destination.getAbsolutePath());
@@ -254,12 +269,36 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveTextButtonActionPerformed
 
+    private void chgInstrumentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgInstrumentButtonActionPerformed
+        // TODO add your handling code here:
+        if (currentMusic != null)
+            currentMusic.stop();
+        currentMusic = null;
+        final InstrumentPicker picker = new InstrumentPicker();
+        try {
+            picker.setSynth(MidiSystem.getSynthesizer());
+        } catch (MidiUnavailableException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        picker.setVisible(true);
+        picker.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                if (picker.isValidIndex())
+                    MainFrame.this.setInstrument(picker.getSelectedInstrument());
+            }
+
+        });
+    }//GEN-LAST:event_chgInstrumentButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
@@ -290,6 +329,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton chgInstrumentButton;
     private javax.swing.JFileChooser chooseMidiToSave;
     private javax.swing.JFileChooser chooseSongFile;
     private javax.swing.JFileChooser chooseTxtToSave;
@@ -303,4 +343,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton saveTextButton;
     private javax.swing.JButton stopButton;
     // End of variables declaration//GEN-END:variables
+
+    private void setInstrument(int selectedInstrument) {
+        this.selectedInstrument = selectedInstrument;
+    }
 }

@@ -79,12 +79,13 @@
                   <Component id="jScrollPane1" min="-2" pref="577" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="pauseButton" pref="123" max="32767" attributes="0"/>
+                      <Component id="pauseButton" max="32767" attributes="0"/>
                       <Component id="playButton" alignment="1" max="32767" attributes="0"/>
                       <Component id="stopButton" alignment="0" max="32767" attributes="0"/>
                       <Component id="loadButton" alignment="1" max="32767" attributes="0"/>
                       <Component id="saveTextButton" alignment="0" max="32767" attributes="0"/>
                       <Component id="saveMidiButton" alignment="0" max="32767" attributes="0"/>
+                      <Component id="chgInstrumentButton" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -94,7 +95,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Component id="loadButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="chgInstrumentButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                   <Component id="playButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="pauseButton" min="-2" max="-2" attributes="0"/>
@@ -178,6 +181,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveTextButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="chgInstrumentButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Change Instrument"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chgInstrumentButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

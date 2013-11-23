@@ -25,12 +25,13 @@ public class Music {
         return paused;
     }
     
-    public Music(String _text)
+    public Music(String _text, int _instrument)
     {
         openSynth();
         synthesizer.loadInstrument(instruments[0]);
         resultingMusic = sequence.createTrack();
         SongTextParser parser = new SongTextParser(_text, resultingMusic);
+        parser.setInstrument(_instrument);
         try {
             resultingMusic = parser.Parse();
         } catch (Exception ex) {
