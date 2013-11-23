@@ -121,6 +121,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         musicText.setColumns(20);
+        musicText.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
         musicText.setRows(5);
         jScrollPane1.setViewportView(musicText);
 
