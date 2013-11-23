@@ -6,10 +6,7 @@
 
 package musicHandling;
 
-/**
- *
- * @author alister
- */
+
 public class SongEvent {
     private float BPM;
     private Note note;

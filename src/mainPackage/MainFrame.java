@@ -13,10 +13,7 @@ import saveFiles.*;
  * and open the template in the editor.
  */
 
-/**
- *
- * @author alister
- */
+
 public class MainFrame extends javax.swing.JFrame {
 
     /**

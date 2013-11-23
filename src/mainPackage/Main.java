@@ -5,13 +5,7 @@
  */
 
 package mainPackage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import musicHandling.SongTextParser;
-/**
- *
- * @author alister
- */
+
 public class Main {
 
     /**

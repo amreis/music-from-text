@@ -6,10 +6,6 @@
 
 package musicHandling;
 
-/**
- *
- * @author alister
- */
 public enum SongEventKind {
     NOTE,
     PAUSE,

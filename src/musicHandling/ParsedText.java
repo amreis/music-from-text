@@ -128,15 +128,15 @@ public class ParsedText {
         lastExclamationIndex = eventList.size();
     }
 
-    private void treatOctaveModifier(char changeOctave) {
+    private void treatOctaveModifier(char character) {
         final char NEWLINE = '\n';
         int value = -1;
         try {
-            value = Integer.parseInt(String.valueOf(changeOctave));
+            value = Integer.parseInt(String.valueOf(character));
         }
         catch (NumberFormatException e)
         {
-            if (changeOctave == NEWLINE)
+            if (character == NEWLINE)
             {
                 this.CURRENT_OCTAVE = MAIN_OCTAVE;
                 return;
@@ -145,32 +145,43 @@ public class ParsedText {
         
         if (isEven(value))
         {
-            if (this.CURRENT_OCTAVE < 10) this.CURRENT_OCTAVE += 1;
+            if (this.CURRENT_OCTAVE < 10) this.CURRENT_OCTAVE ++;
         }
-        else if (this.CURRENT_OCTAVE > 0) this.CURRENT_OCTAVE -= 1;
+        else if (this.CURRENT_OCTAVE > 0) this.CURRENT_OCTAVE --;
     }
     
     private void treatTriple() {
         SongEvent s = null;
         int eventPosition = -1;
+        int lastNotePosition;
+        try {
+        lastNotePosition  = findLastNotePosition(eventList);
+        } catch (Exception e)
+        { return; }
+        
+        eventPosition = lastNotePosition;
+        List<SongEvent> afterEvent = listAfter(eventList, eventPosition);
+        eventList.set(eventPosition + 1, s);
+        eventList.set(eventPosition + 2, s);
+        if (afterEvent.isEmpty()) return;
+        eventList.addAll(eventPosition + 3, afterEvent);
+        
+        
+    }
+    
+    private int findLastNotePosition(ArrayList<SongEvent> eventList) 
+            throws Exception
+    {
         for (int i = eventList.size() - 1; i >= 0; i--)
             if (eventList.get(i).getEventKind() == SongEventKind.NOTE)
             {
-                s = eventList.get(i);
-                eventPosition = i;
-                break;
+                return i;
             }
-        if (s == null) return;
-        else
-        {
-            List<SongEvent> afterEvent = eventList.subList(eventPosition+1, 
-                    eventList.size() - 1);
-            eventList.set(eventPosition + 1, s);
-            eventList.set(eventPosition + 2, s);
-            if (afterEvent.isEmpty()) return;
-            eventList.addAll(eventPosition + 3, afterEvent);
-        }
-        
+        throw new Exception("Didn't find a note");
+    }
+    private List listAfter(List list, int index)
+    {
+        return list.subList(index+1, list.size()-1);
     }
 
     private void treatPause() {

@@ -15,10 +15,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author alister
- */
+
 public class SongFile {
     
     private String filename;

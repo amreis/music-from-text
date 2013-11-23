@@ -10,11 +10,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.midi.MidiSystem;
-/**
- *
- * @author UserSeven
- */
 import javax.sound.midi.Sequence;
+
+
 public class MidiSaver {
     private static final String STANDARD_FILE_EXTENSION = ".mid";
     private final Sequence sequenceToSave;

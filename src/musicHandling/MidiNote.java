@@ -6,10 +6,7 @@
 
 package musicHandling;
 
-/**
- *
- * @author alister
- */
+
 public enum MidiNote {
     DO(60),
     DO_SHARP(61),
@@ -100,9 +97,6 @@ public enum MidiNote {
             default:
                 ; // Never Happens.
         }
-        
-     
-    
         
         return null;
     }

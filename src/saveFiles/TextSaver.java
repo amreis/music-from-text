@@ -24,25 +24,22 @@ public class TextSaver {
         try
         {
             writer = new BufferedWriter(new FileWriter(filename));
-            String[] splitText = textToSave.split("\n");
+            String[] splitText = getLines(textToSave);
             for (String line : splitText)
             {
                 writer.write(line);
                 writer.newLine();
             }
             writer.flush();
+            
         }
         catch (IOException e)
         { }
-        finally
-        {
-            try
-            {
-                if (writer != null)
-                    writer.close();
-            }
-            catch (IOException e)
-            { }
-        }
+        
+    }
+    
+    private String[] getLines(String text)
+    {
+        return text.split("\n");
     }
 }
