@@ -51,11 +51,12 @@ public class NoteTest {
     /**
      * Test of fromIndex method, of class Note.
      */
+    @Test
     public void testFromNegativeIndex() throws Exception {
         Note result = Note.fromIndex(-1);
         assertNull(result);
     }
-    
+    @Test
     public void testFromBigIndex() throws Exception
     {
         Note result = Note.fromIndex(13);
