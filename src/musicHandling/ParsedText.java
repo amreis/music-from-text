@@ -86,7 +86,9 @@ public class ParsedText {
     }
 
     private void treatNote(char note) {
-        SongNote baseNote = new SongNote(Note.fromCharValue(note).getNoteIndex(), currentOctave);
+        SongNote baseNote;
+        baseNote = new SongNote(Note.fromCharValue(note).getNoteIndex(), currentOctave);
+      
         if (rawText.isEmpty())
         {
             eventList.add(new SongEvent(baseNote, 

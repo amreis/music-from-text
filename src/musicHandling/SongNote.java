@@ -10,6 +10,14 @@ public class SongNote
 {
     private Note note;
     private int octave;
+
+    public Note getBaseNote() {
+        return note;
+    }
+
+    public int getOctave() {
+        return octave;
+    }
 	
     public SongNote(int note, int octave)
     {
@@ -25,6 +33,7 @@ public class SongNote
     {
         if (this.note == Note.SI)
         {
+            if (this.octave == 10) return;
             this.note = Note.DO;
             this.octave ++;
         }
@@ -36,8 +45,10 @@ public class SongNote
     
     public void toBemol()
     {
+        
         if (this.note == Note.DO)
         {
+            if (this.octave == 0) return;
             this.note = Note.SI;
             this.octave -- ;
         }

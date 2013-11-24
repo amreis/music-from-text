@@ -14,9 +14,7 @@ public class Music {
     private static Synthesizer synthesizer;
     private static Sequencer sequencer;
     private static Sequence sequence;
-    private static Instrument[] instruments;
-    private static MidiChannel[] midiChannels;
-    
+ 
     private Track resultingMusic;
     private boolean paused;
 
@@ -71,17 +69,15 @@ public class Music {
                 synthesizer = (Synthesizer)sequencer;
             sequence = new Sequence(Sequence.PPQ, 4);
         }
-        catch (Exception ex) {  }
+        catch (InvalidMidiDataException ex) {
+            Logger.getLogger(Music.class.getName()).log(Level.SEVERE, "Invalid sequence specification");
+        } catch (MidiUnavailableException ex) {
+            Logger.getLogger(Music.class.getName()).log(Level.SEVERE, "Midi not available!");
+        }
         
         Soundbank sb = synthesizer.getDefaultSoundbank();
         
-        if (sb != null)
-        {
-            instruments = sb.getInstruments();
-           // synthesizer.loadInstrument(instruments[0]);
-        }
-        
-        midiChannels = synthesizer.getChannels();
+      
         
         
         
@@ -97,7 +93,6 @@ public class Music {
         
         sequencer = null;
         synthesizer = null;
-        instruments = null;
     }
     
     public void play()

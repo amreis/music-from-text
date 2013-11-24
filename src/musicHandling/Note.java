@@ -27,7 +27,7 @@ public enum Note {
 	
 	Note(int note)
 	{
-		this.noteIndex = note;
+            this.noteIndex = note;
 	}
 	
 	public int getNoteIndex()
@@ -37,6 +37,10 @@ public enum Note {
         
         public static Note fromCharValue(char value)
         {
+            if (! Character.isLowerCase(value))
+            {
+                value = Character.toLowerCase(value);
+            }
             switch(value)
             {
                 case 'c':
@@ -57,7 +61,7 @@ public enum Note {
             return null;
         }
         
-        public static Note fromIndex(int index)
+        public static Note fromIndex(int index) 
         {
             switch(index)
             {
