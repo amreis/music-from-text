@@ -166,7 +166,7 @@ public class ParsedText {
    
 
     private void treatPause() {
-        eventList.add(new SongEvent(null, SongEventKind.PAUSE, currentBpm));
+        eventList.add(new SongEvent(SongEventKind.PAUSE, currentBpm));
     }
 
     

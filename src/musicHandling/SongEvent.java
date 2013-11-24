@@ -16,6 +16,13 @@ public class SongEvent {
         return eventKind;
     }
     
+    public SongEvent(SongEventKind _eventKind, float _BPM)
+    {
+        this.BPM = _BPM;
+        this.eventKind = _eventKind;
+        assert(_eventKind != SongEventKind.NOTE);
+    }
+    
     public SongEvent(SongNote _note, SongEventKind _eventKind, float _BPM)
     {
         this.BPM = _BPM;
