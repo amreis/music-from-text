@@ -28,10 +28,9 @@ public class Music {
     public Music(String _text, int _instrument)
     {
         openSynth();
-        synthesizer.loadInstrument(instruments[0]);
+        //synthesizer.loadInstrument(instruments[0]);
         resultingMusic = sequence.createTrack();
-        SongTextParser parser = new SongTextParser(_text, resultingMusic);
-        parser.setInstrument(_instrument);
+        SongTextParser parser = new SongTextParser(_text, resultingMusic, _instrument);
         try {
             resultingMusic = parser.Parse();
         } catch (Exception ex) {
@@ -79,7 +78,7 @@ public class Music {
         if (sb != null)
         {
             instruments = sb.getInstruments();
-            synthesizer.loadInstrument(instruments[0]);
+           // synthesizer.loadInstrument(instruments[0]);
         }
         
         midiChannels = synthesizer.getChannels();

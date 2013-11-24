@@ -9,10 +9,7 @@ package musicHandling;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author alilastNoteter
- */
+
 public class ParsedText {
     private ArrayList<SongEvent> eventList;
     private String rawText;
@@ -248,15 +245,6 @@ public class ParsedText {
         return (command >= '0' && command <= '9');
     }
 
-    private int getSharp(int value) {
-        return value + 1;
-    }
-
-    private int getBemol(int value) {
-        return value - 1;
-    }
-
-    
     
     private boolean isEven(int number)
     {

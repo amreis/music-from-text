@@ -32,6 +32,12 @@ public class SongTextParser {
         this.targetTrack = _targetTrack;
     }
     
+    public SongTextParser(String _textToParse, Track _targetTrack, int _instrument)
+    {
+        this(_textToParse, _targetTrack);
+        this.instrument = _instrument;
+    }
+    
     
     
     public Track Parse() throws Exception
