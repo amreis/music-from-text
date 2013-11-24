@@ -75,8 +75,6 @@ public class SongTextParser {
         {
             switch (event.getEventKind())
             {
-                case BPM_CHANGE:
-                    break;
                 case NOTE:
                     resultingTrack.add(addNoteOnToSong(event, trackPosition));
                     trackPosition = advanceInTrack(trackPosition, event.getBPM());

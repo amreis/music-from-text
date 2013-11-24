@@ -9,8 +9,11 @@ package musicHandling;
 public enum CommandKind {
     NOTE,
     NOTE_MODIFIER,
-    OCTAVE_MODIFIER,
-    BPM_MODIFIER,
+    OCTAVE_UP,
+    OCTAVE_DOWN,
+    OCTAVE_RESET,
+    BPM_UP,
+    BPM_DOWN,
     NO_OPERATION,
     TRIPLE_LAST_NOTE,
     LOOP,

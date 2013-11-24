@@ -8,7 +8,5 @@ package musicHandling;
 
 public enum SongEventKind {
     NOTE,
-    PAUSE,
-    BPM_CHANGE;
-    
+    PAUSE;    
 }

@@ -7,7 +7,6 @@
 package musicHandling;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class ParsedText {
@@ -18,8 +17,8 @@ public class ParsedText {
     private final float MAIN_BPM = 120.0f;
     private final float HIGH_BPM = 480.0f;
     private final float LOW_BPM = 60.0f;
-    private float CURRENT_BPM = 120.0f;
-    private int CURRENT_OCTAVE = 5;
+    private float currentBpm = 120.0f;
+    private int currentOctave = 5;
     private int lastExclamationIndex = 0;
     
     
@@ -49,8 +48,11 @@ public class ParsedText {
             switch (kind)
             {
                
-                case BPM_MODIFIER:
-                    treatBpmModifier(classifyMe);
+                case BPM_DOWN:
+                    decreaseBPM();
+                    break;
+                case BPM_UP:
+                    increaseBPM();
                     break;
                 case NO_OPERATION:
                     ;
@@ -64,8 +66,14 @@ public class ParsedText {
                 case NOTE_MODIFIER:
                     ; // Do Nothing, or maybe change the semitone again?
                     break;
-                case OCTAVE_MODIFIER:
-                    treatOctaveModifier(classifyMe);
+                case OCTAVE_DOWN:
+                    decreaseOctave();
+                    break;
+                case OCTAVE_RESET:
+                    resetOctave();
+                    break;
+                case OCTAVE_UP:
+                    increaseOctave();
                     break;
                 case PAUSE:
                     treatPause();
@@ -78,18 +86,18 @@ public class ParsedText {
     }
 
     private void treatNote(char note) {
-        SongNote baseNote = new SongNote(Note.fromCharValue(note).getNoteIndex(), CURRENT_OCTAVE);
+        SongNote baseNote = new SongNote(Note.fromCharValue(note).getNoteIndex(), currentOctave);
         if (rawText.isEmpty())
         {
             eventList.add(new SongEvent(baseNote, 
-                    SongEventKind.NOTE, CURRENT_BPM));
+                    SongEventKind.NOTE, currentBpm));
             return;
         }
         char nextChar = rawText.charAt(0);
         CommandKind nextCharKind = classify(nextChar);
         if (nextCharKind != CommandKind.NOTE_MODIFIER)
             eventList.add(new SongEvent(baseNote,
-                    SongEventKind.NOTE, CURRENT_BPM));
+                    SongEventKind.NOTE, currentBpm));
         else
         {
             rawText = removeFirstCharacter(rawText);
@@ -101,55 +109,43 @@ public class ParsedText {
             {
                 baseNote.toBemol();
             }
-            MidiNote newNote;
             
             eventList.add(new SongEvent(baseNote,
-                    SongEventKind.NOTE, CURRENT_BPM));
+                    SongEventKind.NOTE, currentBpm));
         }
     }
     private void treatLoop() {
         int eventsUntilNow = eventList.size();
         for (int i = lastExclamationIndex; i < eventsUntilNow; i++)
         {
-            SongEvent event = eventList.get(i);
-            if (event.getEventKind() != SongEventKind.BPM_CHANGE)
-                eventList.add(eventList.get(i));
+            eventList.add(eventList.get(i));
         }
         lastExclamationIndex = eventList.size();
     }
 
-    private void treatOctaveModifier(char character) {
-        final char NEWLINE = '\n';
-        int value = -1;
-        try {
-            value = Integer.parseInt(String.valueOf(character));
-        }
-        catch (NumberFormatException e)
-        {
-            if (character == NEWLINE)
-            {
-                this.CURRENT_OCTAVE = MAIN_OCTAVE;
-                return;
-            }
-        }
-        
-        if (isEven(value))
-        {
-            if (this.CURRENT_OCTAVE < 10) this.CURRENT_OCTAVE ++;
-        }
-        else if (this.CURRENT_OCTAVE > 0) this.CURRENT_OCTAVE --;
+    
+
+    private void decreaseOctave() {
+        if (this.currentOctave > 0) this.currentOctave --;
+    }
+
+    private void increaseOctave() {
+        if (this.currentOctave < 10) this.currentOctave ++;
+    }
+    
+    private void resetOctave()
+    {
+        this.currentOctave = MAIN_OCTAVE;
     }
     
     private void treatTriple() {
-        SongEvent lastNote = null;
-        int eventPosition = -1;
+        SongEvent lastNote;
         int lastNotePosition;
         try {
         lastNotePosition  = findLastNotePosition(eventList);
         } catch (Exception e)
         { return; }
         
-        eventPosition = lastNotePosition;
         lastNote = eventList.get(lastNotePosition);
         lastNote.setBPM(lastNote.getBPM() / 3);
         eventList.set(lastNotePosition, lastNote);
@@ -167,24 +163,10 @@ public class ParsedText {
             }
         throw new Exception("Didn't find a note");
     }
-    private List listAfter(List list, int index)
-    {
-        if (index + 1 <= list.size() - 1)
-            return list.subList(index+1, list.size()-1);
-        else return null;
-    }
+   
 
     private void treatPause() {
-        eventList.add(new SongEvent(null, SongEventKind.PAUSE, CURRENT_BPM));
-    }
-
-    private void treatBpmModifier(char classifyMe) {
-        if (classifyMe == ';')
-        {
-            increaseBPM();
-        }
-        else
-            decreaseBPM();
+        eventList.add(new SongEvent(null, SongEventKind.PAUSE, currentBpm));
     }
 
     
@@ -204,8 +186,14 @@ public class ParsedText {
                 return CommandKind.NOTE_MODIFIER;
             
         }
-        else if (isNumeric(command) || command == NEW_LINE)        
-            return CommandKind.OCTAVE_MODIFIER;
+        else if (isNumeric(command))
+        {
+            if (isEven(command))        
+                return CommandKind.OCTAVE_UP;
+            else return CommandKind.OCTAVE_DOWN;
+        }
+        else if (command == NEW_LINE)
+            return CommandKind.OCTAVE_RESET;
         
         else if (command == '?' || command == '.')
             return CommandKind.TRIPLE_LAST_NOTE;
@@ -213,8 +201,10 @@ public class ParsedText {
         else if (command == ' ')        
             return CommandKind.PAUSE;
         
-        else if (command == ';' || command == ',')        
-            return CommandKind.BPM_MODIFIER;
+        else if (command == ';')        
+            return CommandKind.BPM_UP;
+        else if (command == ',')
+            return CommandKind.BPM_DOWN;
         
         else if (command == '!')
             return CommandKind.LOOP;
@@ -253,15 +243,15 @@ public class ParsedText {
 
     
     private void increaseBPM() {
-        if (this.CURRENT_BPM <= HIGH_BPM/2)
-            this.CURRENT_BPM *= 2;
+        if (this.currentBpm <= HIGH_BPM/2)
+            this.currentBpm *= 2;
         
        
     }
 
     private void decreaseBPM() {
-        if (this.CURRENT_BPM >= LOW_BPM*2)
-            this.CURRENT_BPM /= 2;
+        if (this.currentBpm >= LOW_BPM*2)
+            this.currentBpm /= 2;
     }
     
 }
