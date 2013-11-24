@@ -150,11 +150,9 @@ public class ParsedText {
         { return; }
         
         eventPosition = lastNotePosition;
-        List<SongEvent> afterEvent = listAfter(eventList, eventPosition);
-        eventList.set(eventPosition + 1, lastNote);
-        eventList.set(eventPosition + 2, lastNote);
-        if (afterEvent.isEmpty()) return;
-        eventList.addAll(eventPosition + 3, afterEvent);
+        lastNote = eventList.get(lastNotePosition);
+        lastNote.setBPM(lastNote.getBPM() / 3);
+        eventList.set(lastNotePosition, lastNote);
         
         
     }
@@ -171,7 +169,9 @@ public class ParsedText {
     }
     private List listAfter(List list, int index)
     {
-        return list.subList(index+1, list.size()-1);
+        if (index + 1 <= list.size() - 1)
+            return list.subList(index+1, list.size()-1);
+        else return null;
     }
 
     private void treatPause() {
