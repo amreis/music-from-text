@@ -7,7 +7,19 @@
 package musicHandling;
 
 
-public enum MidiNote {
+
+public abstract class MidiNote
+{
+	private static final int CENTRAL_OCTAVE = 5;
+	private static final int NOTES_IN_AN_OCTAVE = 12;
+	
+	public static int midiValue(int noteIndex, int octave)
+	{
+		return noteIndex + octave * NOTES_IN_AN_OCTAVE;
+	}
+}
+/*
+public abstract class MidiNote {
     DO(60),
     DO_SHARP(61),
     RE(62),
@@ -102,4 +114,4 @@ public enum MidiNote {
         if (value < 0) value = 0;
         return value;
     }
-}
+}*/

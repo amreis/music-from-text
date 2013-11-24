@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  *
- * @author alister
+ * @author alilastNoteter
  */
 public class ParsedText {
     private ArrayList<SongEvent> eventList;
@@ -81,39 +81,32 @@ public class ParsedText {
     }
 
     private void treatNote(char note) {
+        SongNote baseNote = new SongNote(Note.fromCharValue(note).getNoteIndex(), CURRENT_OCTAVE);
         if (rawText.isEmpty())
         {
-            eventList.add(new SongEvent(new Note(MidiNote.fromCharValue(note), CURRENT_OCTAVE), 
+            eventList.add(new SongEvent(baseNote, 
                     SongEventKind.NOTE, CURRENT_BPM));
             return;
         }
         char nextChar = rawText.charAt(0);
         CommandKind nextCharKind = classify(nextChar);
         if (nextCharKind != CommandKind.NOTE_MODIFIER)
-            eventList.add(new SongEvent(new Note(MidiNote.fromCharValue(note), CURRENT_OCTAVE),
+            eventList.add(new SongEvent(baseNote,
                     SongEventKind.NOTE, CURRENT_BPM));
         else
         {
             rawText = removeFirstCharacter(rawText);
-            MidiNote baseNote = MidiNote.fromCharValue(note);
-            int value = baseNote.getMidiValue();
             if (isVowel(nextChar))
             {
-                value = getSharp(value);
+                baseNote.toSharp();
             }
             else
             {
-                value = getBemol(value);
+                baseNote.toBemol();
             }
             MidiNote newNote;
-            try {
-                newNote = MidiNote.fromMidiValue(value);
-            }
-            catch (Exception e)
-            {
-                newNote = baseNote;
-            }
-            eventList.add(new SongEvent(new Note(newNote, CURRENT_OCTAVE),
+            
+            eventList.add(new SongEvent(baseNote,
                     SongEventKind.NOTE, CURRENT_BPM));
         }
     }
@@ -151,7 +144,7 @@ public class ParsedText {
     }
     
     private void treatTriple() {
-        SongEvent s = null;
+        SongEvent lastNote = null;
         int eventPosition = -1;
         int lastNotePosition;
         try {
@@ -161,8 +154,8 @@ public class ParsedText {
         
         eventPosition = lastNotePosition;
         List<SongEvent> afterEvent = listAfter(eventList, eventPosition);
-        eventList.set(eventPosition + 1, s);
-        eventList.set(eventPosition + 2, s);
+        eventList.set(eventPosition + 1, lastNote);
+        eventList.set(eventPosition + 2, lastNote);
         if (afterEvent.isEmpty()) return;
         eventList.addAll(eventPosition + 3, afterEvent);
         

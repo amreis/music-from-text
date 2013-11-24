@@ -9,14 +9,14 @@ package musicHandling;
 
 public class SongEvent {
     private float BPM;
-    private Note note;
+    private SongNote note;
     private SongEventKind eventKind;
 
     public SongEventKind getEventKind() {
         return eventKind;
     }
     
-    public SongEvent(Note _note, SongEventKind _eventKind, float _BPM)
+    public SongEvent(SongNote _note, SongEventKind _eventKind, float _BPM)
     {
         this.BPM = _BPM;
         this.eventKind = _eventKind;
@@ -25,11 +25,11 @@ public class SongEvent {
             assert ( this.eventKind != SongEventKind.NOTE );
     }
     
-    public Note getNote() {
+    public SongNote getNote() {
         return note;
     }
 
-    public void setNote(Note note) {
+    public void setNote(SongNote note) {
         this.note = note;
     }
     

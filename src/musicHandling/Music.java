@@ -54,7 +54,7 @@ public class Music {
             {
                 if ((synthesizer = MidiSystem.getSynthesizer()) == null)
                 {
-                    System.out.println("getSinthesizer() failed!");
+                    System.out.println("Failed to get a valid Synthesizer");
                     return;
                 }
             }

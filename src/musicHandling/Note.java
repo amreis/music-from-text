@@ -7,51 +7,86 @@
 package musicHandling;
 
 
+public enum Note {
 
-public class Note {
-    private MidiNote baseNote;
-    private int octave;
 
-    public MidiNote getBaseNote() {
-        return baseNote;
-    }
-
-    public int getOctave() {
-        return octave;
-    }
-    
-    public Note(MidiNote _baseNote, int _octave)
-    {
-        this.baseNote = _baseNote;
-        if (_octave < 0)
+	DO(0),
+        DO_SHARP(1),
+	RE(2),
+        RE_SHARP(3),
+	MI(4),
+	FA(5),
+        FA_SHARP(6),
+	SOL(7),
+        SOL_SHARP(8),
+	LA(9),
+        LA_SHARP(10),
+	SI(11);
+	
+	private int noteIndex;
+	
+	Note(int note)
+	{
+		this.noteIndex = note;
+	}
+	
+	public int getNoteIndex()
+	{
+		return noteIndex;
+	}
+        
+        public static Note fromCharValue(char value)
         {
-            System.out.println("Octave value under zero, clamped at zero.");
-            _octave = 0;
+            switch(value)
+            {
+                case 'c':
+                    return DO;
+                case 'd':
+                    return RE;
+                case 'e':
+                    return MI;
+                case 'f':
+                    return FA;
+                case 'g':
+                    return SOL;
+                case 'a':
+                    return LA;
+                case 'b':
+                    return SI;
+            }
+            return null;
         }
-        this.octave = _octave;
-    }
-    
-    public Note(int _noteValue)
-    {
-        try {
-        this.baseNote = MidiNote.fromMidiValue(_noteValue);
+        
+        public static Note fromIndex(int index)
+        {
+            switch(index)
+            {
+                case 0:
+                    return DO;
+                case 1:
+                    return DO_SHARP;
+                case 2:
+                    return RE;
+                case 3:
+                    return RE_SHARP;
+                case 4:
+                    return MI;
+                case 5:
+                    return FA;
+                case 6:
+                    return FA_SHARP;
+                case 7:
+                    return SOL;
+                case 8:
+                    return SOL_SHARP;
+                case 9:
+                    return LA;
+                case 10:
+                    return LA_SHARP;
+                case 11:
+                    return SI;
+            }
+            return null;
         }
-        catch (Exception e){ 
-            this.baseNote = null; this.octave = 0;
-            
-            return;
-        };
-        this.octave = distanceToCentralOctave(octaveFromMidiValue(_noteValue));
-    }
-    
-    private int octaveFromMidiValue(int value)
-    {
-       
-        return value / MidiNote.NOTES_IN_AN_OCTAVE;
-    }
-    
-    private int distanceToCentralOctave(int _octave)
-    {
-        return _octave - MidiNote.CENTRAL_OCTAVE;
-    }
+
 }

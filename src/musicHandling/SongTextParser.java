@@ -86,10 +86,9 @@ public class SongTextParser {
     private MidiEvent addNoteOnToSong(SongEvent event, int tick) {
         MidiEvent newEvent = null;
         try {
-            Note noteToAdd = event.getNote();
-            MidiNote midiInfo = noteToAdd.getBaseNote();
+            SongNote noteToAdd = event.getNote();
             newEvent = new MidiEvent(
-                    new ShortMessage(ShortMessage.NOTE_ON, midiInfo.getMidivalueWithOctave(noteToAdd.getOctave()), 100)
+                    new ShortMessage(ShortMessage.NOTE_ON, noteToAdd.getMidiValue(), 100)
                     , tick);
             
         } catch (InvalidMidiDataException ex) {
@@ -101,10 +100,9 @@ public class SongTextParser {
     private MidiEvent addNoteOffToSong(SongEvent event, int tick) {
         MidiEvent newEvent = null;
         try {
-            Note noteToAdd = event.getNote();
-            MidiNote midiInfo = noteToAdd.getBaseNote();
+            SongNote noteToAdd = event.getNote();
             newEvent = new MidiEvent(
-                    new ShortMessage(ShortMessage.NOTE_OFF, midiInfo.getMidivalueWithOctave(noteToAdd.getOctave()), 0)
+                    new ShortMessage(ShortMessage.NOTE_OFF, noteToAdd.getMidiValue(), 0)
                     , tick);
             
         } catch (InvalidMidiDataException ex) {
