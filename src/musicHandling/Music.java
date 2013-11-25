@@ -28,7 +28,7 @@ public class Music {
         openSynth();
         //synthesizer.loadInstrument(instruments[0]);
         resultingMusic = sequence.createTrack();
-        SongTextParser parser = new SongTextParser(_text, resultingMusic, _instrument);
+        EventsToSound parser = new EventsToSound(_text, resultingMusic, _instrument);
         try {
             resultingMusic = parser.Parse();
         } catch (Exception ex) {

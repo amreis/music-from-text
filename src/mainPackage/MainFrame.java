@@ -20,11 +20,24 @@ import saveFiles.*;
 
 public class MainFrame extends javax.swing.JFrame {
     private int selectedInstrument = 0;
+    private Music currentMusic = null;
+
     /**
      * Creates new form NewJFrame
      */
     public MainFrame() {
         initComponents();
+        this.addWindowListener(new WindowAdapter()
+        {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (currentMusic != null)
+                    currentMusic.stop();
+                super.windowClosing(e); //To change body of generated methods, choose Tools | Templates.
+            }
+            
+        });
         musicText.getDocument().addDocumentListener(new DocumentListener(){
 
             @Override
@@ -55,7 +68,6 @@ public class MainFrame extends javax.swing.JFrame {
     });
     }
     
-    private Music currentMusic = null;
 
     /**
      * This method is called from within the constructor to initialize the form.

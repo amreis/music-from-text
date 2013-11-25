@@ -9,7 +9,7 @@ package musicHandling;
 import java.util.ArrayList;
 
 
-public class ParsedText {
+public class TextToEvents {
     private ArrayList<SongEvent> eventList;
     private String rawText;
     
@@ -21,6 +21,7 @@ public class ParsedText {
     private int currentOctave = 5;
     private int lastExclamationIndex = 0;
     
+    private int stringPosition = 0;
     
     
     public ArrayList<SongEvent> getEventList() 
@@ -32,7 +33,7 @@ public class ParsedText {
         return eventList;
     }
     
-    public ParsedText(String text) 
+    public TextToEvents(String text) 
     {
         eventList = new ArrayList<>();
         rawText = text.toLowerCase();
@@ -40,10 +41,11 @@ public class ParsedText {
 
     private void generateEventList() 
     {
-        while (! rawText.isEmpty())
+        while (stringPosition < rawText.length())
         {
-            char classifyMe = rawText.charAt(0);
-            rawText = removeFirstCharacter(rawText);
+            char classifyMe = rawText.charAt(stringPosition);
+            stringPosition ++;
+            // rawText = removeFirstCharacter(rawText);
             CommandKind kind = classify(classifyMe);
             switch (kind)
             {
@@ -95,14 +97,15 @@ public class ParsedText {
                     SongEventKind.NOTE, currentBpm));
             return;
         }
-        char nextChar = rawText.charAt(0);
+        char nextChar = rawText.charAt(stringPosition);
         CommandKind nextCharKind = classify(nextChar);
         if (nextCharKind != CommandKind.NOTE_MODIFIER)
             eventList.add(new SongEvent(baseNote,
                     SongEventKind.NOTE, currentBpm));
         else
         {
-            rawText = removeFirstCharacter(rawText);
+            stringPosition++;
+            // rawText = removeFirstCharacter(rawText);
             if (isVowel(nextChar))
             {
                 baseNote.toSharp();

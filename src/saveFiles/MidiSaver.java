@@ -23,7 +23,7 @@ public class MidiSaver {
     
     public void Save(String filename)
     {
-        if (! filename.contains(STANDARD_FILE_EXTENSION))
+        if (! filename.endsWith(STANDARD_FILE_EXTENSION))
             filename += STANDARD_FILE_EXTENSION;
         try {
             MidiSystem.write(sequenceToSave, MidiSystem.getMidiFileTypes()[0], new File(filename));

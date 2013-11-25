@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.midi.*;
 
-public class SongTextParser {
+public class EventsToSound {
 
     private String textToParse;
     private Track targetTrack;
@@ -26,13 +26,13 @@ public class SongTextParser {
     }
 
  
-    public SongTextParser(String _textToParse, Track _targetTrack)
+    public EventsToSound (String _textToParse, Track _targetTrack)
     {
         this.textToParse = _textToParse;
         this.targetTrack = _targetTrack;
     }
     
-    public SongTextParser(String _textToParse, Track _targetTrack, int _instrument)
+    public EventsToSound (String _textToParse, Track _targetTrack, int _instrument)
     {
         this(_textToParse, _targetTrack);
         this.instrument = _instrument;
@@ -49,8 +49,8 @@ public class SongTextParser {
         
         // Parsing is gonna occur in two steps:
         // 1) Generate the ArrayList<Note> that represents the song
-        //ParsedText intermediate = new ParsedText();
-        ParsedText intermediate = new ParsedText(textToParse);
+        //ParsedText intermediate = new TextToEvents();
+        TextToEvents intermediate = new TextToEvents(textToParse);
         ArrayList<SongEvent> songEvents = intermediate.getEventList();
         
         // 2) Transform to MidiEvents
@@ -58,7 +58,7 @@ public class SongTextParser {
             targetTrack.add(new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, instrument ,0), 0));
         } catch (InvalidMidiDataException e)
         {
-            Logger.getLogger(SongTextParser.class.getName()).log(Level.SEVERE, "Invalid Instrument");
+            Logger.getLogger(EventsToSound.class.getName()).log(Level.SEVERE, "Invalid Instrument");
         }
         translateToMidi(songEvents, targetTrack);
         /*
@@ -96,7 +96,7 @@ public class SongTextParser {
                     , tick);
             
         } catch (InvalidMidiDataException ex) {
-            Logger.getLogger(SongTextParser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EventsToSound.class.getName()).log(Level.SEVERE, null, ex);
         }
         return newEvent;
     }
@@ -110,7 +110,7 @@ public class SongTextParser {
                     , tick);
             
         } catch (InvalidMidiDataException ex) {
-            Logger.getLogger(SongTextParser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EventsToSound.class.getName()).log(Level.SEVERE, null, ex);
         }
         return newEvent;
     }
