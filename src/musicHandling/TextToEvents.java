@@ -91,7 +91,7 @@ public class TextToEvents {
         SongNote baseNote;
         baseNote = new SongNote(Note.fromCharValue(note).getNoteIndex(), currentOctave);
       
-        if (rawText.isEmpty())
+        if (stringPosition == rawText.length())
         {
             eventList.add(new SongEvent(baseNote, 
                     SongEventKind.NOTE, currentBpm));
